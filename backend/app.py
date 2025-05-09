@@ -38,8 +38,12 @@ def generate_keywords():
         size = request.form.get("size")
         image = request.files.get("image")
 
-        # デバッグメッセージ
-        print(f"📝 ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size}")
+        # フォームデータのデバッグ
+        print(f"📝 ブランド: {brand}")
+        print(f"📝 型番: {model}")
+        print(f"📝 カラー: {color}")
+        print(f"📝 カテゴリ: {category}")
+        print(f"📝 サイズ: {size}")
         print(f"🖼️ 画像: {image}")
 
         # 必須項目のチェック
@@ -50,7 +54,7 @@ def generate_keywords():
         if image is None:
             raise Exception("画像ファイルがアップロードされていません。")
 
-        # 画像ファイルのデバッグ情報
+        # 画像ファイルの詳細
         print(f"🖼️ 画像ファイル名: {image.filename}")
         print(f"🖼️ 画像のContent-Type: {image.content_type}")
 
