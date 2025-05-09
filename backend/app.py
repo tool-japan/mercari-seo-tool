@@ -13,28 +13,30 @@ CORS(app)
 
 @app.route("/", methods=["GET"])
 def index():
-    # frontend/index.html を返す
     return send_from_directory(app.static_folder, "index.html")
 
 @app.route("/<path:filename>")
 def static_files(filename):
-    # 静的ファイルを提供
     return send_from_directory(app.static_folder, filename)
 
 @app.route("/api/generate", methods=["POST"])
 def generate_keywords():
-    # フォームデータを取得
-    brand = request.form.get("brand")
-    model = request.form.get("model")
-    color = request.form.get("color")
-    category = request.form.get("category")
-    size = request.form.get("size")
-    image = request.files.get("image")
-
-    # キーワード生成用プロンプト
-    prompt = f"ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size} の商品に適したSEOキーワードを生成してください。"
-    
     try:
+        # フォームデータを取得
+        brand = request.form.get("brand")
+        model = request.form.get("model")
+        color = request.form.get("color")
+        category = request.form.get("category")
+        size = request.form.get("size")
+        image = request.files.get("image")
+
+        # デバッグメッセージ
+        print(f"ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size}")
+        print(f"画像: {image}")
+
+        # キーワード生成用プロンプト
+        prompt = f"ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size} の商品に適したSEOキーワードを生成してください。"
+        
         # OpenAI API 呼び出し
         response = openai.Completion.create(
             model="text-davinci-003",
@@ -45,7 +47,9 @@ def generate_keywords():
         keywords = response.choices[0].text.strip()
         return jsonify({"keywords": keywords})
     except Exception as e:
+        # エラーメッセージを表示
+        print(f"エラー: {e}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)
