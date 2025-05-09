@@ -37,11 +37,13 @@ def generate_keywords():
         color = request.form.get("color")
         category = request.form.get("category")
         size = request.form.get("size")
-        
-        # 画像アップロードを一時的に無効化
-        # image = request.files.get("image")
-        # if image is None:
-        #     raise Exception("画像ファイルがアップロードされていません。")
+
+        # フォームデータのデバッグ
+        print(f"📝 ブランド: {brand}")
+        print(f"📝 型番: {model}")
+        print(f"📝 カラー: {color}")
+        print(f"📝 カテゴリ: {category}")
+        print(f"📝 サイズ: {size}")
 
         # 必須項目のチェック
         if not all([brand, model, color, category]):
