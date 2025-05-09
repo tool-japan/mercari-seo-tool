@@ -21,23 +21,11 @@ CORS(app)
 
 @app.route("/", methods=["GET"])
 def index():
-    try:
-        print("📄 index.htmlを返します")
-        return send_from_directory(app.static_folder, "index.html")
-    except Exception as e:
-        error_message = f"🚨 index.html読み込みエラー: {e}\n{traceback.format_exc()}"
-        print(error_message)
-        return jsonify({"error": error_message}), 500
+    return send_from_directory(app.static_folder, "index.html")
 
 @app.route("/<path:filename>")
 def static_files(filename):
-    try:
-        print(f"📁 静的ファイルを返します: {filename}")
-        return send_from_directory(app.static_folder, filename)
-    except Exception as e:
-        error_message = f"🚨 静的ファイル読み込みエラー: {e}\n{traceback.format_exc()}"
-        print(error_message)
-        return jsonify({"error": error_message}), 500
+    return send_from_directory(app.static_folder, filename)
 
 @app.route("/api/generate", methods=["POST"])
 def generate_keywords():
@@ -49,31 +37,15 @@ def generate_keywords():
         color = request.form.get("color")
         category = request.form.get("category")
         size = request.form.get("size")
-        image = request.files.get("image")
-
-        # デバッグメッセージ
-        print(f"📝 ブランド: {brand}")
-        print(f"📝 型番: {model}")
-        print(f"📝 カラー: {color}")
-        print(f"📝 カテゴリ: {category}")
-        print(f"📝 サイズ: {size}")
-        print(f"🖼️ 画像: {image}")
+        
+        # 画像アップロードを一時的に無効化
+        # image = request.files.get("image")
+        # if image is None:
+        #     raise Exception("画像ファイルがアップロードされていません。")
 
         # 必須項目のチェック
         if not all([brand, model, color, category]):
             raise Exception("フォームの入力が不完全です。")
-
-        # 画像が正しくアップロードされているか確認
-        if image is None:
-            raise Exception("画像ファイルがアップロードされていません。")
-
-        # 画像ファイルの詳細
-        print(f"🖼️ 画像ファイル名: {image.filename}")
-        print(f"🖼️ 画像のContent-Type: {image.content_type}")
-
-        # 画像が正しいMIMEタイプか確認
-        if image.content_type not in ["image/jpeg", "image/png"]:
-            raise Exception(f"サポートされていない画像形式です: {image.content_type}")
 
         # キーワード生成用プロンプト
         prompt = f"ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size} の商品に適したSEOキーワードを生成してください。"
