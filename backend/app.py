@@ -9,32 +9,11 @@ import traceback
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
-# デバッグメッセージ
-print(f"✅ APIキーの一部: {api_key[:5]}...（一部表示）")
-
 # APIキーが正しく設定されているかチェック
 if not api_key:
     print("🚨 OpenAI APIキーが設定されていません。")
     exit(1)
 
-# OpenAI APIのテスト
-try:
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "あなたはSEOの専門家です。"},
-            {"role": "user", "content": "SEOに適したキーワードを生成してください。"}
-        ],
-        max_tokens=50,
-        temperature=0.7
-    )
-    print("✅ OpenAI APIの応答:")
-    print(response)
-except Exception as e:
-    print(f"🚨 OpenAI APIエラーログ: {e}")
-    exit(1)
-
-# OpenAI APIキーの設定
 openai.api_key = api_key
 
 app = Flask(__name__, static_folder="../frontend")
@@ -75,7 +54,7 @@ def generate_keywords():
         prompt = f"ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size} の商品に適したSEOキーワードを生成してください。"
         print(f"📢 プロンプト: {prompt}")
         
-        # OpenAI API 呼び出し
+        # OpenAI Chat API 呼び出し
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
