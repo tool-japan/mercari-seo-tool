@@ -58,6 +58,10 @@ def generate_keywords():
         print(f"🖼️ 画像ファイル名: {image.filename}")
         print(f"🖼️ 画像のContent-Type: {image.content_type}")
 
+        # 画像が正しいMIMEタイプか確認
+        if image.content_type not in ["image/jpeg", "image/png"]:
+            raise Exception(f"サポートされていない画像形式です: {image.content_type}")
+
         # キーワード生成用プロンプト
         prompt = f"ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size} の商品に適したSEOキーワードを生成してください。"
         print(f"📢 プロンプト: {prompt}")
