@@ -50,6 +50,10 @@ def generate_keywords():
         if image is None:
             raise Exception("画像ファイルがアップロードされていません。")
 
+        # 画像ファイルのデバッグ情報
+        print(f"🖼️ 画像ファイル名: {image.filename}")
+        print(f"🖼️ 画像のContent-Type: {image.content_type}")
+
         # キーワード生成用プロンプト
         prompt = f"ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size} の商品に適したSEOキーワードを生成してください。"
         print(f"📢 プロンプト: {prompt}")
