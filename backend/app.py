@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import openai
 import os
 from dotenv import load_dotenv
 import traceback
@@ -13,8 +12,6 @@ api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     print("🚨 OpenAI APIキーが設定されていません。")
     exit(1)
-
-openai.api_key = api_key
 
 app = Flask(__name__, static_folder="../frontend")
 CORS(app)
@@ -30,50 +27,17 @@ def static_files(filename):
 @app.route("/api/generate", methods=["POST"])
 def generate_keywords():
     try:
-        # フォームデータを取得
+        # フォームデータの取得
         print("📥 フォームデータ取得開始")
-        brand = request.form.get("brand")
-        model = request.form.get("model")
-        color = request.form.get("color")
-        category = request.form.get("category")
-        size = request.form.get("size")
-
-        # フォームデータのデバッグ
-        print(f"📝 ブランド: {brand}")
-        print(f"📝 型番: {model}")
-        print(f"📝 カラー: {color}")
-        print(f"📝 カテゴリ: {category}")
-        print(f"📝 サイズ: {size}")
+        form_data = request.form.to_dict()
+        print(f"📄 受信したフォームデータ: {form_data}")
 
         # 必須項目のチェック
-        if not all([brand, model, color, category]):
+        if not all([form_data.get("brand"), form_data.get("model"), form_data.get("color"), form_data.get("category")]):
             raise Exception("フォームの入力が不完全です。")
 
-        # キーワード生成用プロンプト
-        prompt = f"ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size} の商品に適したSEOキーワードを生成してください。"
-        print(f"📢 プロンプト: {prompt}")
-        
-        # OpenAI Chat API 呼び出し
-        try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "あなたは優れたSEOキーワード生成エキスパートです。"},
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=100,
-                temperature=0.7
-            )
-            print("✅ OpenAI API呼び出し成功")
-        except Exception as api_error:
-            # OpenAI APIのエラーログ
-            error_message = f"🚨 OpenAI APIリクエストエラー: {api_error}\n{traceback.format_exc()}"
-            print(error_message)
-            return jsonify({"error": error_message}), 500
-
-        keywords = response.choices[0].message.content.strip()
-        print(f"✅ 生成されたキーワード: {keywords}")
-        return jsonify({"keywords": keywords})
+        # ダミー応答
+        return jsonify({"message": "フォームデータが正しく送信されました！"})
 
     except Exception as e:
         # その他のエラーログ
