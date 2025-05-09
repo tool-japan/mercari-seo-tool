@@ -19,7 +19,7 @@ prompt = "これはAPI接続テストです。SEOに適したキーワードを�
 
 try:
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "あなたは優れたSEOキーワード生成エキスパートです。"},
             {"role": "user", "content": prompt}
