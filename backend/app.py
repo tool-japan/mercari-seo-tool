@@ -6,37 +6,25 @@ from dotenv import load_dotenv
 import traceback
 
 # 環境変数の読み込み
-try:
-    load_dotenv()
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise Exception("OpenAI APIキーが設定されていません。")
-    openai.api_key = api_key
-    print(f"✅ APIキーが正しく設定されました: {api_key[:5]}...（一部表示）")
-except Exception as e:
-    print(f"🚨 環境変数エラー: {e}")
-    exit(1)
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
+
+# デバッグメッセージ
+print(f"✅ APIキーの一部: {api_key[:5]}...（一部表示）")
+
+# OpenAI APIキーの設定
+openai.api_key = api_key
 
 app = Flask(__name__, static_folder="../frontend")
 CORS(app)
 
 @app.route("/", methods=["GET"])
 def index():
-    try:
-        print("📄 index.htmlを返します")
-        return send_from_directory(app.static_folder, "index.html")
-    except Exception as e:
-        print(f"🚨 index.html読み込みエラー: {e}")
-        return jsonify({"error": str(e)}), 500
+    return send_from_directory(app.static_folder, "index.html")
 
 @app.route("/<path:filename>")
 def static_files(filename):
-    try:
-        print(f"📁 静的ファイルを返します: {filename}")
-        return send_from_directory(app.static_folder, filename)
-    except Exception as e:
-        print(f"🚨 静的ファイル読み込みエラー: {e}")
-        return jsonify({"error": str(e)}), 500
+    return send_from_directory(app.static_folder, filename)
 
 @app.route("/api/generate", methods=["POST"])
 def generate_keywords():
@@ -66,14 +54,17 @@ def generate_keywords():
         print(f"📢 プロンプト: {prompt}")
         
         # OpenAI API 呼び出し
-        response = openai.Completion.create(
-            model="text-davinci-003",
-            prompt=prompt,
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "あなたは優れたSEOキーワード生成エキスパートです。"},
+                {"role": "user", "content": prompt}
+            ],
             max_tokens=100,
             temperature=0.7
         )
 
-        keywords = response.choices[0].text.strip()
+        keywords = response.choices[0].message.content.strip()
         print(f"✅ 生成されたキーワード: {keywords}")
         return jsonify({"keywords": keywords})
 
