@@ -3,7 +3,7 @@ document.getElementById("seoForm").addEventListener("submit", async function (e)
     const formData = new FormData(e.target);
     
     try {
-        // 相対URLに修正
+        // 相対URLに修正（Render用）
         const response = await fetch("/api/generate", {
             method: "POST",
             body: formData,
