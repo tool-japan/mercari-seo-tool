@@ -4,6 +4,7 @@ import openai
 import os
 from dotenv import load_dotenv
 import traceback
+import json
 
 # 環境変数の読み込み
 load_dotenv()
@@ -55,7 +56,7 @@ def generate_keywords():
                 "max_tokens": 100,
                 "temperature": 0.7
             }
-            print("📝 APIリクエストペイロード:", request_payload)
+            print("📝 APIリクエストペイロード:", json.dumps(request_payload, ensure_ascii=False, indent=4))
 
             response = openai.ChatCompletion.create(**request_payload)
 
