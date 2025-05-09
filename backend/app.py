@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 # 環境変数の読み込み
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = os.getenv("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")
 
 app = Flask(__name__)
 
