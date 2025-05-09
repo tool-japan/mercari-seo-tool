@@ -45,15 +45,20 @@ def generate_keywords():
         
         # OpenAI Chat API 呼び出し
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[
+            # APIリクエストの詳細をログ出力
+            request_payload = {
+                "model": "gpt-4",
+                "messages": [
                     {"role": "system", "content": "あなたは優れたSEOキーワード生成エキスパートです。"},
                     {"role": "user", "content": prompt}
                 ],
-                max_tokens=100,
-                temperature=0.7
-            )
+                "max_tokens": 100,
+                "temperature": 0.7
+            }
+            print("📝 APIリクエストペイロード:", request_payload)
+
+            response = openai.ChatCompletion.create(**request_payload)
+
             print("✅ OpenAI API呼び出し成功")
             print("📝 APIレスポンス:", response)
 
