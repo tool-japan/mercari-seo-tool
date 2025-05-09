@@ -21,16 +21,29 @@ CORS(app)
 
 @app.route("/", methods=["GET"])
 def index():
-    return send_from_directory(app.static_folder, "index.html")
+    try:
+        print("📄 index.htmlを返します")
+        return send_from_directory(app.static_folder, "index.html")
+    except Exception as e:
+        error_message = f"🚨 index.html読み込みエラー: {e}\n{traceback.format_exc()}"
+        print(error_message)
+        return jsonify({"error": error_message}), 500
 
 @app.route("/<path:filename>")
 def static_files(filename):
-    return send_from_directory(app.static_folder, filename)
+    try:
+        print(f"📁 静的ファイルを返します: {filename}")
+        return send_from_directory(app.static_folder, filename)
+    except Exception as e:
+        error_message = f"🚨 静的ファイル読み込みエラー: {e}\n{traceback.format_exc()}"
+        print(error_message)
+        return jsonify({"error": error_message}), 500
 
 @app.route("/api/generate", methods=["POST"])
 def generate_keywords():
     try:
         # フォームデータを取得
+        print("📥 フォームデータ取得開始")
         brand = request.form.get("brand")
         model = request.form.get("model")
         color = request.form.get("color")
@@ -38,7 +51,7 @@ def generate_keywords():
         size = request.form.get("size")
         image = request.files.get("image")
 
-        # フォームデータのデバッグ
+        # デバッグメッセージ
         print(f"📝 ブランド: {brand}")
         print(f"📝 型番: {model}")
         print(f"📝 カラー: {color}")
@@ -77,6 +90,7 @@ def generate_keywords():
                 max_tokens=100,
                 temperature=0.7
             )
+            print("✅ OpenAI API呼び出し成功")
         except Exception as api_error:
             # OpenAI APIのエラーログ
             error_message = f"🚨 OpenAI APIリクエストエラー: {api_error}\n{traceback.format_exc()}"
