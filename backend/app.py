@@ -56,19 +56,20 @@ def generate_keywords():
             )
             print("✅ OpenAI API呼び出し成功")
             print("📝 APIレスポンス:", response)
+
+            # メッセージが正しく含まれているか確認
+            if not response.choices or not response.choices[0].message:
+                raise Exception("API応答にメッセージが含まれていません。")
+
+            keywords = response.choices[0].message.content.strip()
+            print(f"✅ 生成されたキーワード: {keywords}")
+            return jsonify({"keywords": keywords})
+
         except Exception as api_error:
             # OpenAI APIのエラーログ
             error_message = f"🚨 OpenAI APIリクエストエラー: {api_error}\n{traceback.format_exc()}"
             print(error_message)
             return jsonify({"error": error_message}), 500
-
-        # メッセージが正しく含まれているか確認
-        if not response.choices or not response.choices[0].message:
-            raise Exception("API応答にメッセージが含まれていません。")
-
-        keywords = response.choices[0].message.content.strip()
-        print(f"✅ 生成されたキーワード: {keywords}")
-        return jsonify({"keywords": keywords})
 
     except Exception as e:
         # その他のエラーログ
