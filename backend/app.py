@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
 import openai
 import os
 from dotenv import load_dotenv
@@ -8,10 +9,12 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/", methods=["GET"])
 def index():
-    return "Mercari SEO Tool API is running."
+    # frontend/index.html を返す
+    return send_file("../frontend/index.html")
 
 @app.route("/api/generate", methods=["POST"])
 def generate_keywords():
