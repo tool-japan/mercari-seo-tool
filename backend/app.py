@@ -55,23 +55,29 @@ def generate_keywords():
         print(f"📢 プロンプト: {prompt}")
         
         # OpenAI Chat API 呼び出し
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "あなたは優れたSEOキーワード生成エキスパートです。"},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=100,
-            temperature=0.7
-        )
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "あなたは優れたSEOキーワード生成エキスパートです。"},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=100,
+                temperature=0.7
+            )
+        except Exception as api_error:
+            # OpenAI APIのエラーログ
+            error_message = f"🚨 OpenAI APIリクエストエラー: {api_error}\n{traceback.format_exc()}"
+            print(error_message)
+            return jsonify({"error": error_message}), 500
 
         keywords = response.choices[0].message.content.strip()
         print(f"✅ 生成されたキーワード: {keywords}")
         return jsonify({"keywords": keywords})
 
     except Exception as e:
-        # エラーメッセージを表示
-        error_message = f"🚨 APIリクエストエラー: {e}\n{traceback.format_exc()}"
+        # その他のエラーログ
+        error_message = f"🚨 サーバー内部エラーログ: {e}\n{traceback.format_exc()}"
         print(error_message)
         return jsonify({"error": error_message}), 500
 
