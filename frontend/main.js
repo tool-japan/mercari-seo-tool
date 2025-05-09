@@ -1,9 +1,10 @@
+// RenderのURLに変更
 document.getElementById("seoForm").addEventListener("submit", async function (e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     
     try {
-        const response = await fetch("http://localhost:5000/api/generate", {
+        const response = await fetch("https://mercari-seo-tool.onrender.com/api/generate", {
             method: "POST",
             body: formData,
         });
@@ -14,4 +15,5 @@ document.getElementById("seoForm").addEventListener("submit", async function (e)
         document.getElementById("results").innerHTML = `<p style="color: red;">エラーが発生しました: ${error.message}</p>`;
     }
 });
+
 
