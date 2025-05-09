@@ -9,6 +9,10 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = Flask(__name__)
 
+@app.route("/", methods=["GET"])
+def index():
+    return "Mercari SEO Tool API is running."
+
 @app.route("/api/generate", methods=["POST"])
 def generate_keywords():
     # フォームデータを取得
@@ -19,7 +23,7 @@ def generate_keywords():
     size = request.form.get("size")
     image = request.files.get("image")
 
-    # 簡単なキーワード生成ロジック（後で強化予定）
+    # キーワード生成用プロンプト
     prompt = f"ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size} の商品に適したSEOキーワードを生成してください。"
     
     try:
@@ -37,4 +41,3 @@ def generate_keywords():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
-
