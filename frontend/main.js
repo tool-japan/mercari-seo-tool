@@ -14,7 +14,21 @@ document.getElementById("seoForm").addEventListener("submit", async function (e)
         }
 
         const data = await response.json();
-        document.getElementById("results").innerHTML = `<h2>生成されたキーワード:</h2><p>${data.keywords}</p>`;
+        
+        // デバッグログ
+        console.log("📄 受信したデータ:", data);
+
+        // キーワードが定義されているか確認
+        if (data.keywords) {
+            document.getElementById("results").innerHTML = `<h2>生成されたキーワード:</h2><p>${data.keywords}</p>`;
+        } else if (data.message) {
+            document.getElementById("results").innerHTML = `<h2>メッセージ:</h2><p>${data.message}</p>`;
+        } else if (data.error) {
+            document.getElementById("results").innerHTML = `<p style="color: red;">エラーが発生しました: ${data.error}</p>`;
+        } else {
+            document.getElementById("results").innerHTML = `<p style="color: red;">不明なエラーが発生しました</p>`;
+        }
+
     } catch (error) {
         console.error(error);
         document.getElementById("results").innerHTML = `<p style="color: red;">エラーが発生しました: ${error.message}</p>`;
