@@ -3,6 +3,7 @@ from flask_cors import CORS
 import openai
 import os
 from dotenv import load_dotenv
+import traceback
 
 # 環境変数の読み込み
 load_dotenv()
@@ -34,13 +35,17 @@ def generate_keywords():
         print(f"ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size}")
         print(f"画像: {image}")
 
-        # OpenAI API 呼び出し
-        prompt = f"ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size} の商品に適したSEOキーワードを生成してください。"
-        
+        # 画像が正しくアップロードされているか確認
+        if image is None:
+            raise Exception("画像ファイルがアップロードされていません。")
+
         # APIキーの確認
         if not openai.api_key:
             raise Exception("OpenAI APIキーが設定されていません。")
 
+        # キーワード生成用プロンプト
+        prompt = f"ブランド: {brand}, 型番: {model}, カラー: {color}, カテゴリ: {category}, サイズ: {size} の商品に適したSEOキーワードを生成してください。"
+        
         # OpenAI API 呼び出し
         response = openai.Completion.create(
             model="text-davinci-003",
@@ -54,8 +59,9 @@ def generate_keywords():
         return jsonify({"keywords": keywords})
     except Exception as e:
         # エラーメッセージを表示
-        print(f"エラー: {e}")
-        return jsonify({"error": str(e)}), 500
+        error_message = f"エラー: {e}\n{traceback.format_exc()}"
+        print(error_message)
+        return jsonify({"error": error_message}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
