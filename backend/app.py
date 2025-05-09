@@ -37,13 +37,14 @@ def generate_keywords():
             raise Exception("フォームの入力が不完全です。")
 
         # ダミー応答
-        return jsonify({"message": "フォームデータが正しく送信されました！"})
+        return jsonify({"keywords": "これはテスト用のダミーキーワードです！"})
 
     except Exception as e:
         # その他のエラーログ
         error_message = f"🚨 サーバー内部エラーログ: {e}\n{traceback.format_exc()}"
         print(error_message)
         return jsonify({"error": error_message}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
