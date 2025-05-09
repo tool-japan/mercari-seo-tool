@@ -16,6 +16,11 @@ def index():
     # frontend/index.html を返す
     return send_from_directory(app.static_folder, "index.html")
 
+@app.route("/<path:filename>")
+def static_files(filename):
+    # 静的ファイルを提供
+    return send_from_directory(app.static_folder, filename)
+
 @app.route("/api/generate", methods=["POST"])
 def generate_keywords():
     # フォームデータを取得
