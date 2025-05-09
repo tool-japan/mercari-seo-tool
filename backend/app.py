@@ -82,12 +82,12 @@ def generate_keywords():
         # OpenAI Chat API 呼び出し
         try:
             response = openai.ChatCompletion.create(
-                model="gpt-4",
+                model="GPT-3.5 Turbo",
                 messages=[
                     {"role": "system", "content": "あなたは優れたSEOキーワード生成エキスパートです。"},
                     {"role": "user", "content": prompt}
                 ],
-                max_tokens=100,
+                max_tokens=300,
                 temperature=0.7
             )
             print("✅ OpenAI API呼び出し成功")
